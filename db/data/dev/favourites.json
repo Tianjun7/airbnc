@@ -1,5 +1,8 @@
 [
-  { "guest_name": "Bob Smith", "property_name": "Cosy Country Cottage" },
+  { 
+    "guest_name": "Bob Smith", 
+    "property_name": "Cosy Country Cottage" 
+  },
   {
     "guest_name": "Bob Smith",
     "property_name": "Cosy Loft in the Heart of the City"
