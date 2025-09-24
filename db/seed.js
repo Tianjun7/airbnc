@@ -1,7 +1,9 @@
 const db = require("./connection")
 const format = require("pg-format")
 
-async function seed(propertyTypes, properties){
+async function seed(propertyTypes, properties, users, reviews){
+    await db.query(`DROP TABLE IF EXISTS reviews;`)
+    await db.query(`DROP TABLE IF EXISTS users;`)
     await db.query(`DROP TABLE IF EXISTS properties;`)
     await db.query(`DROP TABLE IF EXISTS property_types;`)
 
@@ -14,25 +16,47 @@ async function seed(propertyTypes, properties){
         property_id SERIAL PRIMARY KEY,
         name VARCHAR(40) NOT NULL,
         property_type VARCHAR(40) NOT NULL REFERENCES property_types(property_type),
-        location VARCHAR(40),
-        price_per_night INTEGER,
+        location VARCHAR(40) NOT NULL,
+        price_per_night INTEGER NOT NULL,
         description VARCHAR(40),
-        host_name VARCHAR(40),
-        amenities VARCHAR ARRAY
+        host_name VARCHAR(40) NOT NULL,
+        amenities VARCHAR ARRAY NOT NULL
         );`)
 
-    await db.query (
+    await db.query(`CREATE TABLE users (
+        user_id SERIAL PRIMARY KEY,
+        first_name VARCHAR(40) NOT NULL,
+        surname VARCHAR(40) NOT NULL,
+        email VARCHAR(40) NOT NULL,
+        phone_number VARCHAR(40),
+        is_host BOOLEAN NOT NULL,
+        avatar VARCHAR(40),
+        created_at TIMESTAMP
+        );`)
+
+    await db.query(`CREATE TABLE reviews(
+         
+        )`)
+
+    await db.query(
         format(`INSERT INTO property_types(property_type, description) VALUES %L`,
             propertyTypes.map(({property_type, description}) => [property_type, description])
         )
     )
 
-    // await db.query (
+    // await db.query(
     //     format(`INSERT INTO properties(name, property_type, location, price_per_night, description, host_name, amenities) VALUES %L`,
     //         properties.map(({name, property_type, location, price_per_night, description, host_name, amenities}) => 
     //             [name, property_type, location, price_per_night, description, host_name, amenities])
     //     )
     // )
+
+    await db.query(
+        format(`INSERT INTO users(first_name, surname, email, phone_number, is_host, avatar) VALUES %L`,
+            users.map(({first_name, surname, email, phone_number, is_host, avatar}) =>
+            [first_name, surname, email, phone_number, is_host, avatar])
+        )
+    )
 }
 
 module.exports = seed;
