@@ -11,6 +11,7 @@ async function seed(propertyTypes, properties){
         );`)
 
     await db.query(`CREATE TABLE properties(
+        property_id SERIAL PRIMARY KEY,
         name VARCHAR(40) NOT NULL,
         property_type VARCHAR(40) NOT NULL REFERENCES property_types(property_type),
         location VARCHAR(40),
