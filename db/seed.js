@@ -20,7 +20,7 @@ async function seed(propertyTypes, properties, users, reviews){
         price_per_night INTEGER NOT NULL,
         description VARCHAR(40),
         host_name VARCHAR(40) NOT NULL,
-        amenities VARCHAR ARRAY NOT NULL
+        amenities TEXT ARRAY NOT NULL
         );`)
 
     await db.query(`CREATE TABLE users (
@@ -35,8 +35,13 @@ async function seed(propertyTypes, properties, users, reviews){
         );`)
 
     await db.query(`CREATE TABLE reviews(
-         
-        )`)
+         review_id SERIAL PRIMARY KEY,
+         property_id INTEGER NOT NULL REFERENCES properties(property_id),
+         guest_id INTEGER NOT NULL REFERENCES users(user_id),
+         rating INTEGER NOT NULL,
+         comment TEXT,
+         created_at TIMESTAMP
+        );`)
 
     await db.query(
         format(`INSERT INTO property_types(property_type, description) VALUES %L`,
@@ -56,6 +61,10 @@ async function seed(propertyTypes, properties, users, reviews){
             users.map(({first_name, surname, email, phone_number, is_host, avatar}) =>
             [first_name, surname, email, phone_number, is_host, avatar])
         )
+    )
+
+    await db.query(
+        format(`INSERT INTO reviews()`)
     )
 }
 
