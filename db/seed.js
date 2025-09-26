@@ -48,12 +48,14 @@ async function seed(propertyTypes, properties, users, reviews){
         )
     )
 
-    await db.query(
-        format(`INSERT INTO users(first_name, surname, email, phone_number, is_host, avatar) VALUES %L`,
+    const {rows: insertedUsers} = await db.query(
+        format(`INSERT INTO users(first_name, surname, email, phone_number, is_host, avatar) VALUES %L RETURNING *`,
             users.map(({first_name, surname, email, phone_number, is_host, avatar}) =>
             [first_name, surname, email, phone_number, is_host, avatar])
         )
     )
+
+    console.log(insertedUsers);
 
     await db.query(
         format(`INSERT INTO properties(name, property_type, location, price_per_night, description, host_id)
