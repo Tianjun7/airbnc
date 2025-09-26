@@ -1,5 +1,6 @@
 const db = require("./connection")
 const format = require("pg-format")
+const createUsersRef = require("../db/utils")
 
 async function seed(propertyTypes, properties, users, reviews){
     await db.query(`DROP TABLE IF EXISTS reviews;`)
@@ -29,7 +30,7 @@ async function seed(propertyTypes, properties, users, reviews){
         property_type VARCHAR(40) NOT NULL REFERENCES property_types(property_type),
         location VARCHAR(40) NOT NULL,
         price_per_night INTEGER NOT NULL,
-        description VARCHAR(40),
+        description VARCHAR,
         host_id INTEGER NOT NULL REFERENCES users(user_id)
         );`)
 
@@ -55,7 +56,7 @@ async function seed(propertyTypes, properties, users, reviews){
         )
     )
 
-    console.log(insertedUsers);
+    const userRef = createUsersRef(insertedUsers);
 
     await db.query(
         format(`INSERT INTO properties(name, property_type, location, price_per_night, description, host_id)
@@ -65,12 +66,16 @@ async function seed(propertyTypes, properties, users, reviews){
                 location,
                 price_per_night,
                 description,
-                host_name
+                userRef[host_name]
             ])
         )
     )
 
-
+    await db.query(
+        format(`INSERT INTO reviews(property_id, guest_id, rating, comment) VALUES %L`,
+            reviews.map(({}))
+        )
+    )
  }
 
 module.exports = seed;
