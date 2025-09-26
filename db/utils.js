@@ -10,7 +10,13 @@ function createUsersRef(users){
 }
 
 function createPropertyRef(properties){
+    const ref = {};
 
+    properties.forEach(element => {
+        ref[element.name] = element.property_id;
+    });
+
+    return ref;
 }
 
 module.exports = { createUsersRef, createPropertyRef};

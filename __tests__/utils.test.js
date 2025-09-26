@@ -43,13 +43,54 @@ describe("createUsersRef", () => {
             "first_name": "Emma",
             "surname": "Davies",
         }]
+
+        const ref = createUsersRef(user)
+
+        expect(ref["Alice Johnson"]).toBe(1)
+        expect(ref["Bob Smith"]).toBe(2)
+        expect(ref["Emma Davies"]).toBe(3)
     })
 });
 
 describe("createPropertyref", () => {
     test("Empty array should return empty object", () => {
-        expect(createPropertyRef([])).toBe({})
+        expect(createPropertyRef([])).toEqual({})
     });
 
-    
+    test("Assign property name as key", () => {
+        const property = [{
+            "property_id": 1,
+            "name": "Modern Apartment in City Center"
+        }]
+
+        const ref = createPropertyRef(property)
+
+        expect(ref.hasOwnProperty("Modern Apartment in City Center")).toBe(true);
+    });
+
+    test("assign correct value to the key", () => {
+        const property = [{
+            "property_id": 1,
+            "name": "Modern Apartment in City Center"
+        }]
+
+        const ref = createPropertyRef(property)
+
+        expect(ref["Modern Apartment in City Center"]).toBe(1);
+    });
+
+    test("Can do it with larger array", () => {
+        const property = [{
+            "property_id": 1,
+            "name": "Modern Apartment in City Center"
+        },{
+            "property_id": 2,
+            "name": "Cosy Family House"
+        }]
+
+        const ref = createPropertyRef(property)
+
+        expect(ref["Modern Apartment in City Center"]).toBe(1)
+        expect(ref["Cosy Family House"]).toBe(2)
+    })
 })

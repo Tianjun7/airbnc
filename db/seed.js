@@ -58,7 +58,7 @@ async function seed(propertyTypes, properties, users, reviews){
 
     const userRef = createUsersRef(insertedUsers);
 
-    await db.query(
+    const {rows: insertedProperties} = await db.query(
         format(`INSERT INTO properties(name, property_type, location, price_per_night, description, host_id)
             VALUES %L`, properties.map(({name, property_type, location, price_per_night, description, host_name}) => [
                 name,
@@ -71,14 +71,16 @@ async function seed(propertyTypes, properties, users, reviews){
         )
     )
 
-    await db.query(
-        format(`INSERT INTO reviews(guest_id, property_id, rating, comment, created_at) VALUES %L`,
-            reviews.map(({guest_name, property_name, rating, comment, created_at}) => [
-                userRef[guest_name],
+    console.log(insertedProperties)
 
-            ])
-        )
-    )
+    // await db.query(
+    //     format(`INSERT INTO reviews(guest_id, property_id, rating, comment, created_at) VALUES %L`,
+    //         reviews.map(({guest_name, property_name, rating, comment, created_at}) => [
+    //             userRef[guest_name],
+
+    //         ])
+    //     )
+    // )
  }
 
 module.exports = seed;
