@@ -1,4 +1,4 @@
-const createUsersRef = require("../db/utils");
+const {createUsersRef, createPropertyRef} = require("../db/utils");
 
 describe("createUsersRef", () => {
     test("Empty array returns empty object", () => {
@@ -44,4 +44,12 @@ describe("createUsersRef", () => {
             "surname": "Davies",
         }]
     })
+});
+
+describe("createPropertyref", () => {
+    test("Empty array should return empty object", () => {
+        expect(createPropertyRef([])).toBe({})
+    });
+
+    
 })

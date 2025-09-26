@@ -9,4 +9,8 @@ function createUsersRef(users){
     return ref;
 }
 
-module.exports = createUsersRef;
+function createPropertyRef(properties){
+
+}
+
+module.exports = { createUsersRef, createPropertyRef};

@@ -1,6 +1,6 @@
 const db = require("./connection")
 const format = require("pg-format")
-const createUsersRef = require("../db/utils")
+const {createUsersRef, createPropertyRef}= require("../db/utils")
 
 async function seed(propertyTypes, properties, users, reviews){
     await db.query(`DROP TABLE IF EXISTS reviews;`)
@@ -36,8 +36,8 @@ async function seed(propertyTypes, properties, users, reviews){
 
     await db.query(`CREATE TABLE reviews(
          review_id SERIAL PRIMARY KEY,
-         property_id INTEGER NOT NULL REFERENCES properties(property_id),
          guest_id INTEGER NOT NULL REFERENCES users(user_id),
+         property_id INTEGER NOT NULL REFERENCES properties(property_id),
          rating INTEGER NOT NULL,
          comment TEXT,
          created_at TIMESTAMP
@@ -72,8 +72,11 @@ async function seed(propertyTypes, properties, users, reviews){
     )
 
     await db.query(
-        format(`INSERT INTO reviews(property_id, guest_id, rating, comment) VALUES %L`,
-            reviews.map(({}))
+        format(`INSERT INTO reviews(guest_id, property_id, rating, comment, created_at) VALUES %L`,
+            reviews.map(({guest_name, property_name, rating, comment, created_at}) => [
+                userRef[guest_name],
+
+            ])
         )
     )
  }
