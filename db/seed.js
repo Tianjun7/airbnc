@@ -56,15 +56,19 @@ async function seed(propertyTypes, properties, users, reviews){
     )
 
     await db.query(
-        format(`INSERT INTO properties(name, property_type, location, price_per_night, description, host_name, amenities) VALUES %L`,
-            properties.map(({name, property_type, location, price_per_night, description, host_name, amenities}) => 
-                [name, property_type, location, price_per_night, description, host_name, amenities])
+        format(`INSERT INTO properties(name, property_type, location, price_per_night, description, host_id)
+            VALUES %L`, properties.map(({name, property_type, location, price_per_night, description, host_name}) => [
+                name,
+                property_type,
+                location,
+                price_per_night,
+                description,
+                host_name
+            ])
         )
     )
 
-//     await db.query(
-//         format(`INSERT INTO reviews()`)
-//     )
+
  }
 
 module.exports = seed;
