@@ -3,8 +3,20 @@ const app = require("../app")
 
 describe("app", () => {
     describe("GET /api/properties", () => {
-        test("Should ", async () => {
-        const response = await request(app).get("/api/properties").expect(200)
+        test("Should return status of 200", async () => {
+            await request(app).get("/api/properties").expect(200)
+        });
+
+        test("responds with an array with key of properties", async () => {
+            const {body} = await request(app).get("/api/properties")
+
+            expect(Array.isArray(body.properties)).toBe(true);
+        });
+    })
+
+    describe("GET /api/reviews", () => {
+        test("Should return status of 200", async () => {
+            const response = await request(app).get("/api/reviews").expect(200)
         })
     })
 })
