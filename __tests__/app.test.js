@@ -16,7 +16,7 @@ describe("app", () => {
 
     describe("GET /api/reviews", () => {
         test("Should return status of 200", async () => {
-            const response = await request(app).get("/api/reviews").expect(200)
+            await request(app).get("/api/reviews").expect(200)
         })
     })
 })
