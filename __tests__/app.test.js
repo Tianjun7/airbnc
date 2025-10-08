@@ -21,10 +21,12 @@ describe("app", () => {
     })
 
     describe("GET /api/users/:id", () => {
-
+        test("Should return status of 200", async () => {
+            await request(app).get("/api/users/:id").expect(200)
+        })
     })
 
     describe("GET /api/properties/:id", () => {
-        
+
     })
 })
