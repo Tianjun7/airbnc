@@ -2,6 +2,12 @@ const request = require("supertest")
 const app = require("../app")
 
 describe("app", () => {
+    test("404 - Path not found", async () => {
+        const { body } = await request(app).get("/invalid/path").expect(404);
+
+        expect(body.msg).toBe("Path not found.")
+    })
+
     describe("GET /api/properties", () => {
         test("Should return status of 200", async () => {
             await request(app).get("/api/properties").expect(200)
