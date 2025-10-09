@@ -13,7 +13,16 @@ describe("app", () => {
             expect(Array.isArray(body.properties)).toBe(true);
         });
 
-        test("objects has all correct key-value pairs", async() => {
+        test("array is an array of objects from property table", async () => {
+            const {body} = await request(app).get("/api/properties")
+            test = body.properties;
+
+            test.forEach(element => {
+               expect(typeof element).toBe("object") 
+            });
+        })
+
+        test("property objects has all correct properties", async() => {
             const {body} = await request(app).get("/api/properties")
             testProperty = body.properties[0];
 
@@ -34,15 +43,36 @@ describe("app", () => {
             const {body} = await request(app).get("/api/reviews")
 
             expect(Array.isArray(body.reviews)).toBe(true);
-            console.log(body)
+            expect(body).toHaveProperty("reviews")
         });
+
+        test("array is an array of objects from reviews table", async () => {
+            const {body} = await request(app).get("/api/reviews")
+            test = body.reviews;
+
+            test.forEach(element => {
+               expect(typeof element).toBe("object") 
+            });
+        })
+
+        test("review object has all correct properties", async () => {
+            const {body} = await request(app).get("/api/reviews")
+            testReview = body.reviews[0]
+
+            expect(testReview).toHaveProperty("review_id")
+            expect(testReview).toHaveProperty("comment")
+            expect(testReview).toHaveProperty("rating")
+            expect(testReview).toHaveProperty("created_at")
+            expect(testReview).toHaveProperty("guest")
+            expect(testReview).toHaveProperty("guest_avatar")
+        })
     })
 
-    // describe("GET /api/users/:id", () => {
-    //     test("Should return status of 200", async () => {
-    //         await request(app).get("/api/users/:id").expect(200)
-    //     })
-    // })
+    describe("GET /api/users/:id", () => {
+        test("Should return status of 200", async () => {
+            await request(app).get("/api/users/:id").expect(200)
+        })
+    })
 
     // describe("GET /api/properties/:id", () => {
 
