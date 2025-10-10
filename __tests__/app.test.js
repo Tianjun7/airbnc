@@ -76,11 +76,50 @@ describe("app", () => {
 
     describe("GET /api/users/:id", () => {
         test("Should return status of 200", async () => {
-            await request(app).get("/api/users/:id").expect(200)
+            await request(app).get("/api/users/3").expect(200)
+        })
+
+        test("Should return an object with property of User", async () => {
+            const { body } = await request(app).get("/api/users/3")
+
+            expect(body).toHaveProperty("user")
+        })
+
+        test("The object is filled with information from the user table", async () => {
+            const { body } = await request(app).get("/api/users/3")
+
+            expect(typeof body.user).toBe("object")
+            expect(body.user).toHaveProperty("user_id")
+            console.log(body)
+        })
+
+        test("The user object has all necessary properties", async () => {
+            const { body } = await request(app).get("/api/users/3")
+
+            expect(body.user).toHaveProperty("user_id")
+            expect(body.user).toHaveProperty("first_name")
+            expect(body.user).toHaveProperty("surname")
+            expect(body.user).toHaveProperty("email")
+            expect(body.user).toHaveProperty("phone_number")
+            expect(body.user).toHaveProperty("avatar")
+            expect(body.user).toHaveProperty("created_at")
+        })
+
+        test("The correct user has been requested", async () => {
+            const { body } = await request(app).get("/api/users/3")
+
+            expect(body.user.user_id).toBe(3)
+            console.log(body)
+        })
+
+        test("If given an id that does not exsist return 404 error", async () => {
+            const { body } = await request(app).get("/api/users/100").expect(404)
+
+            expect(body.msg).toBe("Path not found.")
         })
     })
 
-    // describe("GET /api/properties/:id", () => {
+    describe("GET /api/properties/:id", () => {
 
-    // })
+    })
 })
