@@ -124,6 +124,50 @@ describe("app", () => {
     })
 
     describe("GET /api/properties/:id", () => {
+        test("Should return status of 200", async () => {
+            await request(app).get("/api/properties/3").expect(200)
+        })
 
+        test("Should return an object with property of property", async () => {
+            const { body } = await request(app).get("/api/properties/3")
+
+            expect(body).toHaveProperty("property")
+        })
+
+        test("The object is filled with information from the property table", async () => {
+            const { body } = await request(app).get("/api/properties/3")
+
+            expect(typeof body.property).toBe("object")
+            expect(body.property).toHaveProperty("property_id")
+        })
+
+        test("The property object has all necessary properties", async () => {
+            const { body } = await request(app).get("/api/properties/3")
+
+            expect(body.property).toHaveProperty("property_id")
+            expect(body.property).toHaveProperty("property_name")
+            expect(body.property).toHaveProperty("location")
+            expect(body.property).toHaveProperty("price_per_night")
+            expect(body.property).toHaveProperty("host")
+            expect(body.property).toHaveProperty("host_avatar")
+        })
+
+        test("The correct property has been requested", async () => {
+            const { body } = await request(app).get("/api/properties/3")
+
+            expect(body.property.property_id).toBe(3)
+        })
+
+        test("If given an id that does not exsist return 404 error", async () => {
+            const { body } = await request(app).get("/api/properties/10000").expect(404)
+
+            expect(body.msg).toBe("Property does not exsist.")
+        })
+
+        test("Can handle a bad request such as wrong data type", async () => {
+            const { body } = await request(app).get("/api/properties/'3'").expect(400)
+
+            expect(body.msg).toBe("Bad request.")
+        })
     })
 })
