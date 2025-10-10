@@ -114,8 +114,14 @@ describe("app", () => {
 
         test("If given an id that does not exsist return 404 error", async () => {
             const { body } = await request(app).get("/api/users/10000").expect(404)
-            console.log(body)
+
             expect(body.msg).toBe("User does not exsist.")
+        })
+
+        test("Can handle a bad request such as wrong data type", async () => {
+            const { body } = await request(app).get("/api/users/'3'").expect(400)
+
+            expect(body.msg).toBe("Bad request.")
         })
     })
 
