@@ -90,7 +90,6 @@ describe("app", () => {
 
             expect(typeof body.user).toBe("object")
             expect(body.user).toHaveProperty("user_id")
-            console.log(body)
         })
 
         test("The user object has all necessary properties", async () => {
@@ -109,7 +108,6 @@ describe("app", () => {
             const { body } = await request(app).get("/api/users/3")
 
             expect(body.user.user_id).toBe(3)
-            console.log(body)
         })
 
         test("If given an id that does not exsist return 404 error", async () => {
