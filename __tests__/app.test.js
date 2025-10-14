@@ -40,20 +40,20 @@ describe("app", () => {
         });
     })
 
-    describe("GET /api/reviews", () => {
+    describe("GET /api/properties/:id/reviews", () => {
         test("Should return status of 200", async () => {
-            await request(app).get("/api/reviews").expect(200)
+            await request(app).get("/api/properties/1/reviews").expect(200)
         });
 
         test("Responds with an array with key of properties", async () => {
-            const {body} = await request(app).get("/api/reviews")
+            const {body} = await request(app).get("/api/properties/1/reviews")
 
             expect(Array.isArray(body.reviews)).toBe(true);
             expect(body).toHaveProperty("reviews")
         });
 
         test("array is an array of objects from reviews table", async () => {
-            const {body} = await request(app).get("/api/reviews")
+            const {body} = await request(app).get("/api/properties/1/reviews")
             test = body.reviews;
 
             test.forEach(element => {
@@ -62,7 +62,7 @@ describe("app", () => {
         })
 
         test("review object has all correct properties", async () => {
-            const {body} = await request(app).get("/api/reviews")
+            const {body} = await request(app).get("/api/properties/1/reviews")
             testReview = body.reviews[0]
 
             expect(testReview).toHaveProperty("review_id")
@@ -71,6 +71,14 @@ describe("app", () => {
             expect(testReview).toHaveProperty("created_at")
             expect(testReview).toHaveProperty("guest")
             expect(testReview).toHaveProperty("guest_avatar")
+        })
+
+        test("should only return the reviews linked to the property_id provided in req", async () => {
+            const {body} = await request(app).get("/api/properties/1/reviews")
+
+            body.reviews.forEach(element => {
+                element.property_id = 1;
+            });
         })
     })
 
@@ -169,5 +177,13 @@ describe("app", () => {
 
             expect(body.msg).toBe("Bad request.")
         })
+    })
+
+    describe("POST /api/properties/:id/reviews", () => {
+        test("Should resolve with staus code of 201", async () => {
+            await request(app).post("/api/properties/:id/reviews").expect(201)
+        })
+
+        
     })
 })
