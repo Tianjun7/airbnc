@@ -15,3 +15,7 @@ exports.fetchReviews = async (id) => {
 
     return reviews;
 }
+
+exports.insertReview = async () => {
+    
+}

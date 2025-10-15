@@ -1,5 +1,16 @@
 const request = require("supertest")
 const app = require("../app")
+const seed = require("../db/seed")
+const { propertiesData, propertyTypesData, reviewsData, usersData} = require("../db/data/test")
+const db = require("../db/connection")
+
+beforeEach(async () => {
+    await seed(propertyTypesData, propertiesData, usersData, reviewsData)
+})
+
+afterAll(() => {
+    db.end()
+})
 
 describe("app", () => {
     test("404 - Path not found", async () => {
@@ -181,9 +192,19 @@ describe("app", () => {
 
     describe("POST /api/properties/:id/reviews", () => {
         test("Should resolve with staus code of 201", async () => {
-            await request(app).post("/api/properties/:id/reviews").expect(201)
+            const testReview = {guest_id: 1, rating: 5, comment: "test review"}
+            
+            await request(app).post("/api/properties/1/reviews").send(testReview).expect(201)
         })
 
-        
+        test("Should respond with newly inserted review with fresh id", async () => {
+            const testReview = {guest_id: 1, rating: 5, comment: "test review"}
+
+            const { body } = await request(app)
+            .post("/api/properties/1/reviews")
+            .send(testReview)
+
+            expect(body.review).toEqual({...testReview, review_id: 17, property_id: 1, created_at: "2025"})
+        })
     })
 })

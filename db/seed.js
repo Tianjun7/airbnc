@@ -3,6 +3,8 @@ const format = require("pg-format")
 const {createUsersRef, createPropertyRef}= require("../db/utils")
 
 async function seed(propertyTypes, properties, users, reviews){
+    console.log("seeding...")
+    
     await db.query(`DROP TABLE IF EXISTS reviews;`)
     await db.query(`DROP TABLE IF EXISTS properties;`)
     await db.query(`DROP TABLE IF EXISTS users;`)
