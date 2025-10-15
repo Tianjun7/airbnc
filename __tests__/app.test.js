@@ -206,5 +206,31 @@ describe("app", () => {
 
             expect(body.review).toEqual({...testReview, review_id: 17, property_id: 1, created_at: null})
         })
+
+        test("Should respond with error 400 if guest_id not provided", async () => {
+            const testReview = { rating: 5, comment: "test review"}
+
+            const { body } = await request(app)
+            .post("/api/properties/1/reviews")
+            .send(testReview)
+            .expect(400)
+        })
+
+        test("Should respond with error 400 if rating not provided", async () => {
+            const testReview = { guest_id: 1, comment: "test review"}
+
+            const { body } = await request(app)
+            .post("/api/properties/1/reviews")
+            .send(testReview)
+            .expect(400)
+        })
+
+        test("Should respond with error 400 if incorrect data types", async () => {
+            const testReview = { guest_id: "blah", rating: 5, comment: "test review"}
+            const { body } = await request(app)
+            .post("/api/properties/1/reviews")
+            .send(testReview)
+            .expect(400)
+        })
     })
 })

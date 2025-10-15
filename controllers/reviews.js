@@ -12,7 +12,6 @@ exports.postReview = async (req,res,next) => {
     const { id } = req.params
     
     const review = await insertReview(guest_id, rating, comment, id)
-    console.log(review)
 
     res.status(201).send({ review });
 }
