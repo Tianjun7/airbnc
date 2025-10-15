@@ -233,4 +233,19 @@ describe("app", () => {
             .expect(400)
         })
     })
+
+    describe("DELETE /api/reviews/:id", () => {
+        test("Should respond with status code 204", async () => {
+            await request(app).delete("/api/reviews/1").expect(204)
+        })
+
+        test("Should delete row from reviews table with relevant id", async () => {
+            await request(app).delete("/api/reviews/1")
+
+            const { body } = await request(app).get("/api/properties/3/reviews")
+            body.reviews.forEach(element => {
+                expect(element.review_id).not.toBe(1)
+            });
+        })
+    })
 })

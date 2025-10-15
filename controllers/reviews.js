@@ -1,4 +1,4 @@
-const { fetchReviews, insertReview } = require("../models/reviews")
+const { fetchReviews, insertReview, deleteReview } = require("../models/reviews")
 
 exports.getReviews = async (req, res, next) => {
     const {id} = req.params
@@ -14,4 +14,11 @@ exports.postReview = async (req,res,next) => {
     const review = await insertReview(guest_id, rating, comment, id)
 
     res.status(201).send({ review });
+}
+
+exports.deleteReview = async (req,res,next) => {
+    const{ id } = req.params
+    const deletedReview = await deleteReview(id)
+
+    res.status(204).send(deletedReview)
 }

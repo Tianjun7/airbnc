@@ -24,3 +24,10 @@ exports.insertReview = async (guest_id, rating, comment, id) => {
     )
     return review
 }
+
+exports.deleteReview = async(id) => {
+    const { rows: review } = await db.query(`DELETE FROM reviews 
+        WHERE review_id = $1`, [id]
+    )
+    return review
+}
