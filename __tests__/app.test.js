@@ -247,5 +247,17 @@ describe("app", () => {
                 expect(element.review_id).not.toBe(1)
             });
         })
+
+        test("Should respond with bad request if given id is in wrong data type", async () => {
+            await request(app).delete("/api/reviews/'1'").expect(400)
+        })
+
+        test("Should respond with not found if given no id", async () => {
+            await request(app).delete("/api/reviews/").expect(404)
+        })
+
+        test("Should respond with not found if id doesn't exist", async () => {
+            await request(app).delete("/api/reviews/1000").expect(404)
+        })
     })
 })

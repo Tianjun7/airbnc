@@ -19,6 +19,8 @@ exports.postReview = async (req,res,next) => {
 exports.deleteReview = async (req,res,next) => {
     const{ id } = req.params
     const deletedReview = await deleteReview(id)
-
+    if(deletedReview === undefined){
+        res.status(404).send({ msg: "Review does not exsist."})
+    }
     res.status(204).send(deletedReview)
 }
