@@ -16,6 +16,11 @@ exports.fetchReviews = async (id) => {
     return reviews;
 }
 
-exports.insertReview = async () => {
-    
+exports.insertReview = async (guest_id, rating, comment, id) => {
+    const { rows: [review] } = await db.query(`INSERT INTO reviews (guest_id, rating, comment, property_id)
+        VALUES 
+        ($1, $2, $3, $4) RETURNING *;`, 
+        [guest_id, rating, comment, id]
+    )
+    return review
 }

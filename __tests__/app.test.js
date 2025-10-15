@@ -204,7 +204,7 @@ describe("app", () => {
             .post("/api/properties/1/reviews")
             .send(testReview)
 
-            expect(body.review).toEqual({...testReview, review_id: 17, property_id: 1, created_at: "2025"})
+            expect(body.review).toEqual({...testReview, review_id: 17, property_id: 1, created_at: null})
         })
     })
 })

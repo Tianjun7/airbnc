@@ -8,10 +8,11 @@ exports.getReviews = async (req, res, next) => {
 }
 
 exports.postReview = async (req,res,next) => {
-    const {guest_id, rating, comment } = req.body
+    const { guest_id, rating, comment } = req.body
     const { id } = req.params
     
-    const review = insertReview()
+    const review = await insertReview(guest_id, rating, comment, id)
+    console.log(review)
 
-    res.status(201).send();
+    res.status(201).send({ review });
 }

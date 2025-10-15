@@ -6,6 +6,8 @@ const {handlePathNotFound, handleServerErrors, handleBadRequests} = require("./e
 
 const app = express()
 
+app.use(express.json())
+
 app.get("/api/properties", getProperties)
 
 app.get("/api/properties/:id/reviews", getReviews)
