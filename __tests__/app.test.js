@@ -59,7 +59,23 @@ describe("app", () => {
         })
 
         test("If given a property type that doesn't exist return 404", async () => {
+            await request(app).get("/api/properties?property_type=LOL").expect(404)
+        })
+
+        test("If given max price, returns list of properties that don't exceed that price", async() => {
+            const {body} = await request(app).get("/api/properties?maxPrice=120")
             
+            body.properties.forEach((element) => {
+                expect(element.price_per_night).toBeLessThanOrEqual(120)
+            })
+        })
+
+        test("If given min price, returns list of properties that exceed that price", async() => {
+            const {body} = await request(app).get("/api/properties?minPrice=120")
+            
+            body.properties.forEach((element) => {
+                expect(element.price_per_night).toBeLessThanOrEqual(120)
+            })
         })
     })
 

@@ -16,6 +16,21 @@ exports.fetchProperties =  async (query) => {
     )
     return properties;
     }
+    else if(Object.hasOwn(query, 'maxPrice')){
+        const {rows: properties} = await db.query(
+        `SELECT 
+        property_id, 
+        name AS property_name, 
+        location, 
+        price_per_night, 
+        CONCAT(first_name,' ', surname) AS host,
+        property_type 
+        FROM properties 
+        join users ON properties.host_id = users.user_id 
+        WHERE price_per_night <= $1;`,[query.maxPrice]
+    )
+    return properties
+    }
     
     const {rows: properties} = await db.query(
         `SELECT 

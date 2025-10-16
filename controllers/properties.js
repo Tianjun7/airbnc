@@ -2,9 +2,12 @@ const { fetchProperties, fetchPropertyById } = require("../models/properties")
 
 exports.getProperties = async (req, res, next) => {
     const { query } = req
+    const properties = await fetchProperties(query)
     console.log(query)
     
-    const properties = await fetchProperties(query);
+    if(properties.length === 0){
+        res.status(404).send({msg: "Path Not Found"})
+    }
     res.status(200).send({ properties })
 }
 
