@@ -74,8 +74,17 @@ describe("app", () => {
             const {body} = await request(app).get("/api/properties?minPrice=120")
             
             body.properties.forEach((element) => {
-                expect(element.price_per_night).toBeLessThanOrEqual(120)
+                expect(element.price_per_night).toBeGreaterThanOrEqual(120)
             })
+        })
+
+        test.only("If given sort by cost per night in order of asc, returns list of properties sorted by price from lowest to highest", async() => {
+            const {body} = await request(app).get("/api/properties?sortby=price_per_night&order=ascending")
+            const arr = body.properties
+
+            for(let i = 1; i< arr.length; i++){
+                expect(arr[i].price_per_night).toBeLessThan(arr[i - 1].price_per_night)
+            }
         })
     })
 
