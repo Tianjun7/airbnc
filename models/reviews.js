@@ -27,7 +27,7 @@ exports.insertReview = async (guest_id, rating, comment, id) => {
 
 exports.deleteReview = async(id) => {
     const { rows: [checkExist] } = await db.query(`SELECT * FROM reviews WHERE review_id = $1`, [id])
-    console.log(checkExist)
+
     if(checkExist === undefined){
         return checkExist
     }

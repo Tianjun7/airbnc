@@ -2,6 +2,7 @@ const { fetchProperties, fetchPropertyById } = require("../models/properties")
 
 exports.getProperties = async (req, res, next) => {
     const { query } = req
+    console.log(query)
     const properties = await fetchProperties(query)
 
     if(properties.length === 0){

@@ -78,12 +78,21 @@ describe("app", () => {
             })
         })
 
-        test.only("If given sort by cost per night in order of asc, returns list of properties sorted by price from lowest to highest", async() => {
-            const {body} = await request(app).get("/api/properties?sortby=price_per_night&order=ascending")
+        test("If given sort by cost per night in order of asc, returns list of properties sorted by price from lowest to highest", async() => {
+            const {body} = await request(app).get("/api/properties?sortby=price_per_night&order=ASC")
             const arr = body.properties
 
             for(let i = 1; i< arr.length; i++){
-                expect(arr[i].price_per_night).toBeLessThan(arr[i - 1].price_per_night)
+                expect(arr[i].price_per_night).toBeGreaterThanOrEqual(arr[i - 1].price_per_night)
+            }
+        })
+
+        test("If given sort by cost per night in order of asc, returns list of properties sorted by price from lowest to highest", async() => {
+            const {body} = await request(app).get("/api/properties?sortby=price_per_night&order=DESC")
+            const arr = body.properties
+
+            for(let i = 1; i< arr.length; i++){
+                expect(arr[i].price_per_night).toBeLessThanOrEqual(arr[i - 1].price_per_night)
             }
         })
     })
@@ -217,7 +226,7 @@ describe("app", () => {
         test("If given an id that does not exsist return 404 error", async () => {
             const { body } = await request(app).get("/api/properties/10000").expect(404)
 
-            expect(body.msg).toBe("Property does not exsist.")
+            expect(body.msg).toBe("Property not found.")
         })
 
         test("Can handle a bad request such as wrong data type", async () => {
