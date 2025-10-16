@@ -49,6 +49,18 @@ describe("app", () => {
             expect(testProperty).toHaveProperty("price_per_night")
             expect(testProperty).toHaveProperty("host")
         });
+
+        test("Should accept sort by property type query and return list of properties", async() => {
+            const {body} = await request(app).get("/api/properties?property_type=House")
+
+            body.properties.forEach((element) => {
+                expect(element.property_type).toBe("House")
+            })
+        })
+
+        test("If given a property type that doesn't exist return 404", async () => {
+            
+        })
     })
 
     describe("GET /api/properties/:id/reviews", () => {

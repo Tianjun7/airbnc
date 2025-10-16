@@ -1,7 +1,10 @@
 const { fetchProperties, fetchPropertyById } = require("../models/properties")
 
 exports.getProperties = async (req, res, next) => {
-    const properties = await fetchProperties();
+    const { query } = req
+    console.log(query)
+    
+    const properties = await fetchProperties(query);
     res.status(200).send({ properties })
 }
 
