@@ -1,8 +1,8 @@
 const seed = require("../db/seed");
 const db = require("./connection")
-const { bookings, favouritesData, imagesData, properties, propertyTypes, reviews, users } = require("./data")
+const { bookingsData, favouritesData, imagesData, propertiesData, propertyTypesData, reviewsData, usersData } = require("./data")
 
-seed(propertyTypes, properties, users, reviews).then(() => {
+seed(propertyTypesData, propertiesData, usersData, reviewsData).then(() => {
     db.end();
 })
 

@@ -8,4 +8,4 @@ const data = {
     development:devData
 }
 
-module.exports = data[ENV];
+module.exports = data[ENV]

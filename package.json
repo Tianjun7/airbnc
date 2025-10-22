@@ -19,7 +19,6 @@
     "test-utils": "jest utils",
     "seed": "node ./db/seed-script.js",
     "seed-test": "NODE_ENV=test node db/seed-script.js",
-    "seed-dev": "NODE_ENV=development node db/seed-script.js",
     "seed-prod": "NODE_ENV=production node db/seed-script.js",
     "setup": "psql -f ./db/setup.sql",
     "dev": "nodemon listen.js"
