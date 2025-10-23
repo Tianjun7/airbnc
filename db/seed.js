@@ -14,10 +14,10 @@ async function seed(propertyTypes, properties, users, reviews){
         user_id SERIAL PRIMARY KEY,
         first_name VARCHAR(40) NOT NULL,
         surname VARCHAR(40) NOT NULL,
-        email VARCHAR(40) NOT NULL,
+        email VARCHAR(50) NOT NULL,
         phone_number VARCHAR(40),
         is_host BOOLEAN NOT NULL,
-        avatar VARCHAR(40),
+        avatar VARCHAR,
         created_at TIMESTAMP
         );`)
 

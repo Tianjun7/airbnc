@@ -6,6 +6,13 @@ console.log(ENV)
 
 require("dotenv").config({path: `${__dirname}/../.env.${ENV}`});
 
-const pool = new Pool();
+const config = {}
+
+if(ENV === "production"){
+    config.connectionString = process.env.DATABASE_URL
+    config.max = 2
+}
+
+const pool = new Pool(config);
 
 module.exports = pool;
