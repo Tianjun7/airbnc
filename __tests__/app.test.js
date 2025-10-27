@@ -20,7 +20,7 @@ describe("app", () => {
     })
 
     describe("GET /api/properties", () => {
-        test("Should return status of 200", async () => {
+        test.only("Should return status of 200", async () => {
             await request(app).get("/api/properties").expect(200)
         });
 

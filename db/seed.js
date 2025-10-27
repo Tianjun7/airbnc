@@ -2,9 +2,11 @@ const db = require("./connection")
 const format = require("pg-format")
 const {createUsersRef, createPropertyRef}= require("../db/utils")
 
-async function seed(propertyTypes, properties, users, reviews){
+async function seed(propertyTypes, properties, users, reviews, images){
     console.log("seeding...")
+    console.log(images)
     
+    await db.query(`DROP TABLE IF EXISTS images`)
     await db.query(`DROP TABLE IF EXISTS reviews;`)
     await db.query(`DROP TABLE IF EXISTS properties;`)
     await db.query(`DROP TABLE IF EXISTS users;`)
@@ -19,12 +21,14 @@ async function seed(propertyTypes, properties, users, reviews){
         is_host BOOLEAN NOT NULL,
         avatar VARCHAR,
         created_at TIMESTAMP
-        );`)
+        );`
+    )
 
     await db.query(`CREATE TABLE property_types(
         property_type VARCHAR(40) NOT NULL PRIMARY KEY,
         description VARCHAR
-        );`)
+        );`
+    )
 
     await db.query(`CREATE TABLE properties(
         property_id SERIAL PRIMARY KEY,
@@ -34,7 +38,8 @@ async function seed(propertyTypes, properties, users, reviews){
         price_per_night INTEGER NOT NULL,
         description VARCHAR,
         host_id INTEGER NOT NULL REFERENCES users(user_id)
-        );`)
+        );`
+    )
 
     await db.query(`CREATE TABLE reviews(
          review_id SERIAL PRIMARY KEY,
@@ -43,7 +48,16 @@ async function seed(propertyTypes, properties, users, reviews){
          rating INTEGER NOT NULL,
          comment TEXT,
          created_at TIMESTAMP
-        );`)
+        );`
+    )
+
+    await db.query(`CREATE TABLE images(
+            images_id SERIAL PRIMARY KEY,
+            property_id INTEGER NOT NULL REFERENCES properties(property_id),
+            image_url VARCHAR NOT NULL,
+            alt_text VARCHAR NOT NULL
+        );`
+    )
 
     await db.query(
         format(`INSERT INTO property_types(property_type, description) VALUES %L`,
@@ -83,6 +97,16 @@ async function seed(propertyTypes, properties, users, reviews){
                 rating,
                 comment,
                 created_at
+            ])
+        )
+    )
+
+    await db.query(
+        format(`INSERT INTO images(property_id, image_url, alt_text) VALUES %L`,
+            images.map(({property_name, image_url, alt_tag}) => [
+                propertyRef[property_name],
+                image_url,
+                alt_tag
             ])
         )
     )
