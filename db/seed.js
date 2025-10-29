@@ -100,8 +100,8 @@ async function seed(propertyTypes, properties, users, reviews, images){
         )
     )
 
-    const { rows: insertedImages } = await db.query(
-        format(`INSERT INTO images(property_id, image_url, alt_text) VALUES %L`,
+    await db.query(
+        format(`INSERT INTO images(property_id, image_url, alt_text) VALUES %L`, 
             images.map(({property_name, image_url, alt_tag}) => [
                 propertyRef[property_name],
                 image_url,
@@ -109,7 +109,6 @@ async function seed(propertyTypes, properties, users, reviews, images){
             ])
         )
     )
-    console.log(insertedImages)
  }
 
 module.exports = seed;

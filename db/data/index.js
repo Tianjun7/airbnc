@@ -1,4 +1,4 @@
-const ENV = process.env.NODE_ENV
+const ENV = process.env.NODE_ENV || "production"
 
 const devData = require("./dev")
 const testData = require("./test")

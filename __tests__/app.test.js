@@ -215,6 +215,7 @@ describe("app", () => {
             expect(body.property).toHaveProperty("price_per_night")
             expect(body.property).toHaveProperty("host")
             expect(body.property).toHaveProperty("host_avatar")
+            expect(body.property).toHaveProperty("images")
         })
 
         test("The correct property has been requested", async () => {
@@ -233,6 +234,10 @@ describe("app", () => {
             const { body } = await request(app).get("/api/properties/'3'").expect(400)
 
             expect(body.msg).toBe("Bad request.")
+        })
+
+        test("Should have all image assoaciated with the proerty id", async () => {
+            
         })
     })
 
