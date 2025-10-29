@@ -1,11 +1,11 @@
 const request = require("supertest")
 const app = require("../app")
 const seed = require("../db/seed")
-const { propertiesData, propertyTypesData, reviewsData, usersData} = require("../db/data/test")
+const { propertiesData, propertyTypesData, reviewsData, usersData, imagesData} = require("../db/data/test")
 const db = require("../db/connection")
 
 beforeEach(async () => {
-    await seed(propertyTypesData, propertiesData, usersData, reviewsData)
+    await seed(propertyTypesData, propertiesData, usersData, reviewsData, imagesData)
 })
 
 afterAll(() => {
@@ -20,7 +20,7 @@ describe("app", () => {
     })
 
     describe("GET /api/properties", () => {
-        test.only("Should return status of 200", async () => {
+        test("Should return status of 200", async () => {
             await request(app).get("/api/properties").expect(200)
         });
 

@@ -4,8 +4,7 @@ const {createUsersRef, createPropertyRef}= require("../db/utils")
 
 async function seed(propertyTypes, properties, users, reviews, images){
     console.log("seeding...")
-    console.log(images)
-    
+
     await db.query(`DROP TABLE IF EXISTS images`)
     await db.query(`DROP TABLE IF EXISTS reviews;`)
     await db.query(`DROP TABLE IF EXISTS properties;`)
@@ -52,7 +51,7 @@ async function seed(propertyTypes, properties, users, reviews, images){
     )
 
     await db.query(`CREATE TABLE images(
-            images_id SERIAL PRIMARY KEY,
+            image_id SERIAL PRIMARY KEY,
             property_id INTEGER NOT NULL REFERENCES properties(property_id),
             image_url VARCHAR NOT NULL,
             alt_text VARCHAR NOT NULL
@@ -101,7 +100,7 @@ async function seed(propertyTypes, properties, users, reviews, images){
         )
     )
 
-    await db.query(
+    const { rows: insertedImages } = await db.query(
         format(`INSERT INTO images(property_id, image_url, alt_text) VALUES %L`,
             images.map(({property_name, image_url, alt_tag}) => [
                 propertyRef[property_name],
@@ -110,6 +109,7 @@ async function seed(propertyTypes, properties, users, reviews, images){
             ])
         )
     )
+    console.log(insertedImages)
  }
 
 module.exports = seed;
