@@ -2,9 +2,11 @@ const db = require("./connection")
 const format = require("pg-format")
 const {createUsersRef, createPropertyRef}= require("../db/utils")
 
-async function seed(propertyTypes, properties, users, reviews, images){
+async function seed(propertyTypes, properties, users, reviews, images, favourites, bookings){
     console.log("seeding...")
 
+    await db.query(`Dr`)
+    await db.query(`DROP TABLE IF EXISTS favourites`)
     await db.query(`DROP TABLE IF EXISTS images`)
     await db.query(`DROP TABLE IF EXISTS reviews;`)
     await db.query(`DROP TABLE IF EXISTS properties;`)
@@ -58,6 +60,12 @@ async function seed(propertyTypes, properties, users, reviews, images){
         );`
     )
 
+    await db.query(`CREATE TABLE favourites(
+            favourite_id SERIAL PRIMARY KEY,
+            guest_id INTEGER NOT NULL REFERENCES users(user_id),
+            property_id INTEGER NOT NULL REFERENCES properties(property_id)
+        );`)
+
     await db.query(
         format(`INSERT INTO property_types(property_type, description) VALUES %L`,
             propertyTypes.map(({property_type, description}) => [property_type, description])
@@ -106,6 +114,15 @@ async function seed(propertyTypes, properties, users, reviews, images){
                 propertyRef[property_name],
                 image_url,
                 alt_tag
+            ])
+        )
+    )
+
+    await db.query(
+        format(`INSERT INTO favourites(guest_id, property_id) VALUES %L`,
+            favourites.map(({guest_name, property_name}) => [
+                userRef[guest_name],
+                propertyRef[property_name]
             ])
         )
     )

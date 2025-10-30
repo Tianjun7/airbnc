@@ -49,16 +49,22 @@ exports.fetchProperties =  async (option) => {
 }
 
 exports.fetchPropertyById = async (id) => {
+
     const { rows: [property] } = await db.query(
-        `SELECT property_id, 
+        `SELECT properties.property_id, 
         name AS property_name, 
         location, 
         price_per_night, 
         CONCAT(first_name,' ', surname) AS host,
-        avatar AS host_avatar
-        FROM properties 
-        join users ON properties.host_id = users.user_id 
-        WHERE property_id = $1;`, [id]
+        avatar AS host_avatar, 
+        ARRAY_AGG(image_url) AS images
+        FROM properties
+        INNER JOIN users 
+        ON properties.host_id = users.user_id 
+        INNER JOIN images 
+        ON images.property_id = properties.property_id 
+        WHERE properties.property_id = $1
+        GROUP BY properties.property_id, users.first_name, users.surname, users.avatar;`, [id]
     )
     return property;
 }

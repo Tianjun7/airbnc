@@ -1,11 +1,11 @@
 const request = require("supertest")
 const app = require("../app")
 const seed = require("../db/seed")
-const { propertiesData, propertyTypesData, reviewsData, usersData, imagesData} = require("../db/data/test")
+const { propertiesData, propertyTypesData, reviewsData, usersData, imagesData, favouritesData, bookingsData} = require("../db/data/test")
 const db = require("../db/connection")
 
 beforeEach(async () => {
-    await seed(propertyTypesData, propertiesData, usersData, reviewsData, imagesData)
+    await seed(propertyTypesData, propertiesData, usersData, reviewsData, imagesData, favouritesData, bookingsData)
 })
 
 afterAll(() => {
@@ -216,6 +216,8 @@ describe("app", () => {
             expect(body.property).toHaveProperty("host")
             expect(body.property).toHaveProperty("host_avatar")
             expect(body.property).toHaveProperty("images")
+
+            console.log(body)
         })
 
         test("The correct property has been requested", async () => {
@@ -236,8 +238,12 @@ describe("app", () => {
             expect(body.msg).toBe("Bad request.")
         })
 
-        test("Should have all image assoaciated with the proerty id", async () => {
-            
+        test.only("Images property should be an array", async () => {
+            const { body } = await request(app).get("/api/properties/3")
+
+            console.log(body)
+            const testImages = body.property.images
+            expect(Array.isArray(testImages)).toBe(true)
         })
     })
 
