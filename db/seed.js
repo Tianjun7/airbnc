@@ -5,7 +5,7 @@ const {createUsersRef, createPropertyRef}= require("../db/utils")
 async function seed(propertyTypes, properties, users, reviews, images, favourites, bookings){
     console.log("seeding...")
 
-    await db.query(`Dr`)
+    await db.query(`DROP TABLE IF EXISTS bookings`)
     await db.query(`DROP TABLE IF EXISTS favourites`)
     await db.query(`DROP TABLE IF EXISTS images`)
     await db.query(`DROP TABLE IF EXISTS reviews;`)
@@ -64,6 +64,16 @@ async function seed(propertyTypes, properties, users, reviews, images, favourite
             favourite_id SERIAL PRIMARY KEY,
             guest_id INTEGER NOT NULL REFERENCES users(user_id),
             property_id INTEGER NOT NULL REFERENCES properties(property_id)
+        );`
+    )
+
+    await db.query(`CREATE TABLE bookings(
+            booking_id SERIAL PRIMARY KEY,
+            property_id INTEGER NOT NULL REFERENCES properties(property_id),
+            guest_id INTEGER NOT NULL REFERENCES users(user_id),
+            check_in_date DATE NOT NULL,
+            check_out_date DATE NOT NULL,
+            created_at TIMESTAMP
         );`)
 
     await db.query(
@@ -123,6 +133,17 @@ async function seed(propertyTypes, properties, users, reviews, images, favourite
             favourites.map(({guest_name, property_name}) => [
                 userRef[guest_name],
                 propertyRef[property_name]
+            ])
+        )
+    )
+
+    await db.query(
+        format(`INSERT INTO bookings(property_id, guest_id, check_in_date, check_out_date) VALUES %L`,
+            bookings.map(({property_name, guest_name, check_in_date, check_out_date}) => [
+                propertyRef[property_name],
+                userRef[guest_name],
+                check_in_date,
+                check_out_date
             ])
         )
     )
