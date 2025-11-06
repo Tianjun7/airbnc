@@ -1,10 +1,13 @@
 const express = require("express")
+const cors = require("cors")
 const { getProperties, getPropertyById } = require("./controllers/properties")
 const { getReviews, postReview, deleteReview } = require("./controllers/reviews")
 const { getUser } = require("./controllers/users")
 const {handlePathNotFound, handleServerErrors, handleBadRequests} = require("./errors")
 
 const app = express()
+
+app.use(cors())
 
 app.use(express.json())
 
