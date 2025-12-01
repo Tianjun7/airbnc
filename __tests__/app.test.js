@@ -48,6 +48,7 @@ describe("app", () => {
             expect(testProperty).toHaveProperty("location")
             expect(testProperty).toHaveProperty("price_per_night")
             expect(testProperty).toHaveProperty("host")
+            expect(testProperty).toHaveProperty("image")
         });
 
         test("Should accept sort by property type query and return list of properties", async() => {
@@ -238,12 +239,20 @@ describe("app", () => {
             expect(body.msg).toBe("Bad request.")
         })
 
-        test.only("Images property should be an array", async () => {
-            const { body } = await request(app).get("/api/properties/3")
+        test("Images property should be an array", async () => {
+            const { body } = await request(app).get("/api/properties/1")
 
             console.log(body)
             const testImages = body.property.images
             expect(Array.isArray(testImages)).toBe(true)
+        })
+
+        test("All associated images are in the array", async () => {
+            const { body } = await request(app).get("/api/properties/1")
+
+            console.log(body)
+            const testImages = body.property.images
+            expect(testImages.length).toBe(3)
         })
     })
 

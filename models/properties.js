@@ -2,15 +2,22 @@ const db = require("../db/connection")
 
 exports.fetchProperties =  async (option) => {
 
-    let query = `SELECT 
-    property_id, 
+    let query = `SELECT
+    properties.property_id, 
     name AS property_name, 
     location, 
     price_per_night, 
     CONCAT(first_name,' ', surname) AS host,
-    property_type 
+    property_type, 
+    img.image_url AS image 
     FROM properties 
-    join users ON properties.host_id = users.user_id`
+    join users ON properties.host_id = users.user_id 
+    LEFT JOIN (
+    SELECT property_id, MIN(image_url) AS image_url
+    FROM images 
+    GROUP BY property_id 
+)img ON properties.property_id = img.property_id`
+
 
     const params = []
 
@@ -44,6 +51,7 @@ exports.fetchProperties =  async (option) => {
     }
 
     const { rows: properties } = await db.query(query, params)
+    console.log(properties)
 
     return properties
 }
@@ -62,7 +70,7 @@ exports.fetchPropertyById = async (id) => {
         INNER JOIN users 
         ON properties.host_id = users.user_id 
         INNER JOIN images 
-        ON images.property_id = properties.property_id 
+        ON properties.property_id = images.property_id 
         WHERE properties.property_id = $1
         GROUP BY properties.property_id, users.first_name, users.surname, users.avatar;`, [id]
     )
