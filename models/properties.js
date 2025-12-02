@@ -18,7 +18,6 @@ exports.fetchProperties =  async (option) => {
     GROUP BY property_id 
 )img ON properties.property_id = img.property_id`
 
-
     const params = []
 
     if(option === undefined){
