@@ -88,7 +88,7 @@ describe("app", () => {
             }
         })
 
-        test("If given sort by cost per night in order of asc, returns list of properties sorted by price from lowest to highest", async() => {
+        test("If given sort by cost per night in order of desc, returns list of properties sorted by price from lowest to highest", async() => {
             const {body} = await request(app).get("/api/properties?sortby=price_per_night&order=DESC")
             const arr = body.properties
 
