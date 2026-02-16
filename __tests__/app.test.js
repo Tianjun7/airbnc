@@ -96,6 +96,27 @@ describe("app", () => {
                 expect(arr[i].price_per_night).toBeLessThanOrEqual(arr[i - 1].price_per_night)
             }
         })
+
+        test("If given multiple filters such return filtered list using all three filters if possible", async() => {
+            const {body} = await request(app).get("/api/properties?minPrice=100&maxPrice=200&property_type=House")
+
+            body.properties.forEach((element) => {
+                expect(element.price_per_night).toBeLessThanOrEqual(200)
+                expect(element.price_per_night).toBeGreaterThanOrEqual(100)
+                expect(element.property_type).toBe("House")
+
+            })
+        })
+
+        test.only("If given filters and sort by should return the filtered list sorted", async() => {
+            const {body} = await request(app).get("/api/properties?minPrice=100&maxPrice=200&property_type=House&sortby=price_per_night&order-DESC")
+
+            const arr = body.properties
+
+            for(let i = 1; i< arr.length; i++){
+                expect(arr[i].price_per_night).toBeLessThanOrEqual(arr[i - 1].price_per_night)
+            }
+        })
     })
 
     describe("GET /api/properties/:id/reviews", () => {
