@@ -20,19 +20,23 @@ exports.fetchProperties =  async (options) => {
 
     const params = []
 
-    if(options === undefined){
+    if(Object.keys(options).length === 0){
         query += ";"
         const { rows: properties } = await db.query(query)
 
         return properties
     }
     else{
-        query += " WHERE"
+        console.log(options)
+
+        if(Object.hasOwn(options, "property_type") || Object.hasOwn(options, "maxPrice") || Object.hasOwn(options, "minPrice")){
+            query += " WHERE"
+        }
+        
         let count = 0
 
         for(const option in options){
-            console.log("iteration")
-            if(options[option] !== "" && option !== "sortby" && option !== "order"){
+            if(option !== "sortby" && option !== "order"){
                 const arr = query.split(" ")
                 if(arr[arr.length - 1] !== "WHERE"){
                     query += " AND"
