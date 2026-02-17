@@ -108,8 +108,8 @@ describe("app", () => {
             })
         })
 
-        test.only("If given filters and sort by should return the filtered list sorted", async() => {
-            const {body} = await request(app).get("/api/properties?minPrice=100&maxPrice=200&property_type=House&sortby=price_per_night&order-DESC")
+        test("If given filters and sort by should return the filtered list sorted", async() => {
+            const {body} = await request(app).get("/api/properties?minPrice=100&maxPrice=200&property_type=House&sortby=price_per_night&order=DESC")
 
             const arr = body.properties
 

@@ -1,6 +1,6 @@
 const db = require("../db/connection")
 
-exports.fetchProperties =  async (option) => {
+exports.fetchProperties =  async (options) => {
 
     let query = `SELECT
     properties.property_id, 
@@ -20,40 +20,58 @@ exports.fetchProperties =  async (option) => {
 
     const params = []
 
-    if(option === undefined){
+    if(options === undefined){
+        query += ";"
         const { rows: properties } = await db.query(query)
 
         return properties
     }
+    else{
+        query += " WHERE"
+        let count = 0
 
-    else if(Object.hasOwn(option, 'property_type')){
-        query += ` WHERE property_type = $1;`
-        params.push(option.property_type)
-    }
-    else if(Object.hasOwn(option, 'maxPrice')){
-        query += ` WHERE price_per_night <= $1;`
-        params.push(option.maxPrice)
-    }
-    else if(Object.hasOwn(option, 'minPrice')){
-        query += ` WHERE price_per_night >= $1;`
-        params.push(option.minPrice)
-    }
-
-    else if(Object.hasOwn(option, 'sortby', 'order')){
-        const order = option.order
-        validOrder = ["ASC", "DESC"]
-
-        if(!validOrder.includes(order)){
-            return Promise.reject({status:400, msg: "Invalid sort option"})
+        for(const option in options){
+            console.log("iteration")
+            if(options[option] !== "" && option !== "sortby" && option !== "order"){
+                const arr = query.split(" ")
+                if(arr[arr.length - 1] !== "WHERE"){
+                    query += " AND"
+                }
+                count += 1
+                if(option === "minPrice"){
+                    query += ` price_per_night>=$${count}`
+                    params.push(options[option])
+                }
+                if(option === "maxPrice"){
+                    query += ` price_per_night<=$${count}`
+                    params.push(options[option])
+                }
+                if(option === "property_type"){
+                    query += ` property_type=$${count}`
+                    params.push(options[option])
+                }
+            }
         }
-        query += ` ORDER BY price_per_night ${order};`
+
+        if(Object.hasOwn(options, 'sortby', 'order')){
+            const order = options.order
+            validOrder = ["ASC","DESC"]
+
+            if(!validOrder.includes(order)){
+                return Promise.reject({status:400, msg: "Invalid sort option"})
+            }
+            query += ` ORDER BY price_per_night ${order}`
+        }
+        
+        query += ";"
+        console.log(query)
+
+        const { rows: properties } = await db.query(query, params)
+
+        return properties
     }
-
-    const { rows: properties } = await db.query(query, params)
-    console.log(properties)
-
-    return properties
 }
+
 
 exports.fetchPropertyById = async (id) => {
 
